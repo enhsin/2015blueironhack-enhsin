@@ -1,0 +1,53 @@
+html,body {
+    height:100%;
+}
+
+.navbar-xs {
+    margin-bottom: 0px;
+}
+
+.fill {
+    width: 100%;
+    height: 90.7%;
+    display: table;
+    padding: 0;
+}
+
+.no-float {
+    height: 100%;
+    float: none;
+    display: table-cell;
+    vertical-align: top;
+    padding:0;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+#chart1, #chart2 {
+    height: 25%;
+    width: 100%;
+    font: 10px sans-serif;
+}
+
+.bar {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.text {
+  fill: #fff;
+}
+
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+#side-menu {
+    margin: 25px 30px 30px 30px;
+}
