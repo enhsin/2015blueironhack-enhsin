@@ -11,8 +11,8 @@
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="css/style.css" type="text/css"/>
-        <script src="chart.js" type="text/javascript"></script>
-        <script src="map.js" type="text/javascript"></script>
+        <script src="js/chart.js" type="text/javascript"></script>
+        <script src="js/map.js" type="text/javascript"></script>
     </head>
 
     <body>
@@ -44,16 +44,72 @@
 
         <div class="container-fluid fill">
             <div class="col-md-4 no-float">
-                <div id="chart1"></div>
-                <div id="chart2"></div>
-                <div id="side-menu">
-                   <div id="property-price" class="menu-line"></div>
-                   <div id="property-bedroom" class="menu-line"></div>
-                   <div id="property-sqft" class="menu-line"></div>
-                   <div id="property-address" class="menu-line"></div>
-                   <div id="driving-distance" class="menu-line"></div>
-                   <div id="crime-rate" class="menu-line"></div>
-                   <div id="website" class="menu-line"></div>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                      <h5 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-overview" aria-expanded="false" aria-controls="collapseOne">Living in Lafayette, IN</a>
+                      </h5>
+                    </div>
+                    <div id="sp-overview" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Living Lafayette, IN">
+                      <div class="panel-body">
+                          <label class="col-sm-3 control-label">Climate</label>
+                          <div id="chart-temp"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                      <h5 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-filter" aria-expanded="true" aria-controls="collapseTwo">Find a Place</a>
+                      </h5>
+                    </div>
+                    <div id="sp-filter" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="Find a Place">
+                      <div class="panel-body">
+                          <form class="form-horizontal">
+                             <div class="form-group">
+                               <label class="col-sm-3 control-label">Bedroom</label>
+                               <div class="col-sm-9" id="bedroom">
+                                  <label class="checkbox-inline">
+                                    <input type="checkbox" id="checkboxBed1" value="1"> 1
+                                  </label>
+                                  <label class="checkbox-inline">
+                                    <input type="checkbox" id="checkboxBed2" value="2"> 2
+                                  </label>
+                                  <label class="checkbox-inline">
+                                    <input type="checkbox" id="checkboxBed3" value="4"> 3
+                                  </label>
+                                  <label class="checkbox-inline">
+                                    <input type="checkbox" id="checkboxBed4" value="8"> 4+
+                                  </label>
+                               </div>
+                             </div>
+                          </form>
+                          <div id="chart1"></div>
+                          <div id="chart2"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                      <h5 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-result" aria-expanded="false" aria-controls="collapseThree">Housing Detail</a>
+                      </h5>
+                    </div>
+                    <div id="sp-result" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Housing Detail">
+                      <div class="panel-body">
+                          <div id="side-menu">
+                             <div id="property-price" class="menu-line"></div>
+                             <div id="property-bedroom" class="menu-line"></div>
+                             <div id="property-sqft" class="menu-line"></div>
+                             <div id="property-address" class="menu-line"></div>
+                             <div id="driving-distance" class="menu-line"></div>
+                             <div id="crime-rate" class="menu-line"></div>
+                             <div id="website" class="menu-line"></div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
             <div class="col-md-8 no-float">

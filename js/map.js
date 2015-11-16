@@ -8,6 +8,8 @@ var bounds = {
     distance: 0.0,
     crimeRate: 0.0
 };
+var bedFlag = 15;
+var plotted = false;
 
 function initialize(lat,lng) {
     var origin = new google.maps.LatLng(lat,lng);
@@ -37,6 +39,16 @@ function initialize(lat,lng) {
         initDraw('chart1','distance','Distance (km)','.0f');
     });
 
+    $("#sp-overview").on('show.bs.collapse', function(){
+        if (!plotted) {
+            $.getJSON("data/weatherMMXT.json", function(data1){
+               $.getJSON("data/weatherMMNT.json", function(data2){
+                   plotTemperature(data1.results, data2.results);
+                });
+            });
+            plotted = true;
+        }
+    });
 
     document.getElementById('list').addEventListener('click', function() {
         var e = document.getElementById('list');
@@ -62,6 +74,30 @@ function initialize(lat,lng) {
             }
         });
     });
+    var form = document.getElementById('bedroom').getElementsByTagName('input');
+    for (var i=0; i < form.length; i++) {
+        if ( form[i].type === 'checkbox' ) {
+            form[i].addEventListener('change', function (event) {
+                if (this.checked) {
+                    if (bedFlag < 15) {
+                        bedFlag += parseInt(this.value);
+                        showMarkers();
+                    } else {
+                        bedFlag = parseInt(this.value);
+                        hideMarkers('bedFlag');
+                    }
+                } else {
+                    bedFlag -= parseInt(this.value);
+                    if ( bedFlag === 0 ) {
+                        bedFlag = 15;
+                        showMarkers();
+                    } else {
+                        hideMarkers('bedFlag');
+                    }
+                }
+            });
+        }
+    }
 }
 
 function createMarkers(data) {
@@ -76,6 +112,11 @@ function createMarkers(data) {
         marker.price = item.price;
         marker.sqft = item.size;
         marker.bed = item.bed;
+        if (item.bed < 4) {
+            marker.bedFlag = Math.pow(2, item.bed - 1);
+        } else {
+            marker.bedFlag = 8;
+        }
         marker.url = item.url;
         marker.address = item.address;
         marker.preCalcDistance = item.distance;
@@ -87,6 +128,12 @@ function createMarkers(data) {
             infowindow.open(map, this);
         });
         google.maps.event.addListener(marker, 'click', function() {
+            if ($("#sp-result").is(":hidden")) {
+                $("#accordion .in").addClass('collapse')
+                                   .removeClass('in');
+                $("#sp-result").removeClass('collapse')
+                               .addClass('in');
+            }
             document.getElementById("property-price").innerHTML = 'Rent: $' + this.price;
             document.getElementById("property-bedroom").innerHTML = 'Bedroom: ' + this.bed;
             document.getElementById("property-sqft").innerHTML = 'Size: ' + this.sqft + ' ft<sup>2</sup>';
@@ -102,10 +149,10 @@ function createMarkers(data) {
 function updateMarkersFromPreCalc(key) {
     for (var i=0; i < markers.length; i++) {
         markers[i].distance = markers[i].preCalcDistance[key]/1000.;
-        markers[i].setVisible(true);
+        if (!markers[i].getVisible()) markers[i].setVisible(true);
     }
     drawHist('chart1','distance');
-    reset('chart2');
+    resetAll();
 }
 
 function updateMarkers(centerLoc) {
@@ -134,20 +181,30 @@ function updateMarkers(centerLoc) {
             });
         })(i);
     }
-    reset('chart2');
+    resetAll();
 }
 
 function hideMarkers(col) {
-    for (var i = 0; i < markers.length; i++) {
-        if (markers[i][col] > bounds[col]) {
-            //markers[i].setMap(null);
-            markers[i].setVisible(false);
-        }
+    if ( col === 'bedFlag' ) {
+       for (var i = 0; i < markers.length; i++) {
+           if ((markers[i].bedFlag & bedFlag) === 0) {
+               markers[i].setVisible(false);
+           }
+       }
+    } else {
+       for (var i = 0; i < markers.length; i++) {
+           if (markers[i][col] > bounds[col]) {
+               //markers[i].setMap(null);
+               markers[i].setVisible(false);
+           }
+       }
     }
 }
 
 function showMarkers() {
     for (var i = 0; i < markers.length; i++) {
+        if (markers[i].getVisible()) continue;
+        if ((markers[i].bedFlag & bedFlag) === 0) continue;
         var show = true;
         for (col in bounds) {
             if (markers[i][col] > bounds[col]) {
@@ -157,6 +214,27 @@ function showMarkers() {
         }
         if (show) markers[i].setVisible(true);
     }
+}
+
+function resetAll() {
+    reset('chart2');
+    clearForm();
+    if ($("#sp-filter").is(":hidden")) {
+        $("#accordion .in").addClass('collapse')
+                           .removeClass('in');
+        $("#sp-filter").removeClass('collapse')
+                       .addClass('in');
+    }
+}
+
+function clearForm() {
+    var form = document.getElementById('bedroom').getElementsByTagName('input');
+    for (var i=0; i < form.length; i++) {
+        if ( form[i].type === 'checkbox' ) {
+            if (form[i].checked) form[i].checked = false;
+        }
+    }
+    bedFlag = 15;
 }
 
 google.maps.event.addDomListener(window, 'load', function(){initialize(40.4240,-86.9290);});

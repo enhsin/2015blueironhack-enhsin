@@ -27,9 +27,20 @@ html,body {
 }
 
 #chart1, #chart2 {
-    height: 25%;
+    height: 130px;
     width: 100%;
     font: 10px sans-serif;
+}
+
+#chart-temp {
+    height: 180px;
+    width: 100%;
+    font: 10px sans-serif;
+}
+
+.navbar-custom {
+    color: #FFFFFF;
+    background-color: #CC3333;
 }
 
 .bar {
