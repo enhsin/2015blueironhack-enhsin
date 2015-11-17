@@ -16,7 +16,7 @@
     </head>
 
     <body>
-        <nav class="navbar-xs navbar-inverse">
+        <!--nav class="navbar-xs navbar-inverse">
           <div class="container-fluid">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav">
@@ -40,10 +40,26 @@
               </form>
             </div>
           </div>
-        </nav>
+          </nav-->
 
-        <div class="container-fluid fill">
-            <div class="col-md-4 no-float">
+          <div class="panel" id="floating-panel">
+              <form class="form-inline">
+                <div class="form-group">
+                <select class="form-control" id="list">
+                   <option value="0">Choose your work place/school</option>
+                   <option value="Purdue Memorial Union">Purdue Memorial Union</option>
+                   <option value="Purdue Stewart Center">Purdue Stewart Center</option>
+                   <option value="Happy Hollow School">Happy Hollow School</option>
+                </select>
+                </div>
+                <div class="form-group">
+                    <input id="address" type="textbox" class="form-control" placeholder="or Enter a new address">
+                    <button id="submit" type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+            </form>
+        </div>
+
+            <div class="col-md-4" id="leftcol">
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                   <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="headingOne">
@@ -55,6 +71,7 @@
                       <div class="panel-body">
                           <label class="col-sm-3 control-label">Climate</label>
                           <div id="chart-temp"></div>
+                          A desirable, and increasingly common, method for mashups to obtain data from a web site is through a web site’s publicly available application programming interface (API). An API is designed specifically to facilitate communication between programs, often including the exchange of data. (You will be introduced in detail to APIs in Chapters 6 and 7.) At this time, Craigslist does not provide a public API but does provide RSS feeds. As I will discuss in Chapter 4, RSS feeds are used to syndicate, or transport, information from a web site to a program that consumes this information. The RSS feeds, however, do not provide enough detail to precisely position the listings on a map. Consequently, Housingmaps.com screen-scrapes (or crawls) Craigslist; that is, Housingmaps.com retrieves and parses the HTML pages of Craigslist to obtain detailed information about each listing. The crawling is performed carefully so as to minimize the use of bandwidth. When you access Housingmaps.com, you are accessing not real-time data from Craigslist but rather the data that has been screen-scraped by Housingmaps.com.
                       </div>
                     </div>
                   </div>
@@ -112,10 +129,9 @@
                   </div>
                 </div>
             </div>
-            <div class="col-md-8 no-float">
-              <div id="map"></div>
+            <div class="col-md-8" id="rightcol">
+                <div id="map"></div>
             </div>
-        </div>
     </body>
 </html>
 

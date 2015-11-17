@@ -1,24 +1,35 @@
 html,body {
     height:100%;
+    overflow: hidden;
 }
 
-.navbar-xs {
-    margin-bottom: 0px;
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  background: none;
 }
 
-.fill {
-    width: 100%;
-    height: 90.7%;
-    display: table;
+@media (min-width: 768px){
+  #leftcol {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 34%;
+    overflow-y: auto;
     padding: 0;
-}
-
-.no-float {
-    height: 100%;
-    float: none;
-    display: table-cell;
-    vertical-align: top;
-    padding:0;
+  }
+  #rightcol {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    width: 66%;
+    padding: 0;
+  }
 }
 
 #map {
