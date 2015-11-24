@@ -4,9 +4,10 @@ Find a safe and green place to rent in West Lafayette/Lafayette area.
 
 #### Data Sources:
 * Apartment listing: [Craigslist](https://tippecanoe.craigslist.org/search/apa).
-* Local crime data: [CrimeReports](https://www.crimereports.com), from police logs submitted by Lafayette and West Lafayette police departments.
+* Local crime data: [CrimeReports](https://www.crimereports.com), from police logs submitted by Lafayette and West Lafayette police departments. I calculated the crime rate as the weighted average number of incidents within 20m x 20m region in the past 6 months, which is all the data that is publicly available from crimereports.com. I used distance inverse as the weight.
 * Climate data: NOAA [Climate Data Online](http://www.ncdc.noaa.gov/cdo-web/datasets). I downloaded 2014 monthly summaries for city of Lafayette.
-* Google Maps API: distance matrix, geocoding.
+* School districts: [TIGER/Line Shapefile by U.S. Census Bureau] (http://catalog.data.gov/dataset/tiger-line-shapefile-2014-state-indiana-current-unified-school-districts-state-based-shapefile), downloaded through data.gov. I used [Quantum GIS](http://www.qgis.org/en/site/) to convert shapefile to KML file.
+* Google Maps API: distance matrix, geocoding, and directions.
 * Map icons: [Map Icons Collection](https://mapicons.mapsmarker.com/).
 
 #### Description:
