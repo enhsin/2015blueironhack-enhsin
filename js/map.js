@@ -190,7 +190,7 @@ function initialize(lat,lng) {
 
 function createMarkers(data) {
     $.each(data, function(index, item) {
-    if (index % 4 === 0) {
+    //if (index % 4 === 0) {
         startArray.push(new google.maps.LatLng(item.lat, item.lng));
         var marker = new google.maps.Marker({
             map: map,
