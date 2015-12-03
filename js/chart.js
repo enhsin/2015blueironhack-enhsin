@@ -1,5 +1,18 @@
 var margin = {top: 10, right: 30, bottom: 30, left: 30};
-var xAxis;
+var pwidth;
+var pheight;
+var poly;
+var points0;
+var tooltip;
+
+function setPlotWidth() {
+    pwidth =  document.getElementById('chart1').offsetWidth - margin.left - margin.right;
+    pheight = document.getElementById('chart1').offsetHeight - margin.top - margin.bottom;
+    tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 1.0)
+        .style("visibility", "hidden");
+}
 
 function plotTemperature(rawDataHi, rawDataLo) {
     var width =  document.getElementById('chart-temp').offsetWidth - margin.left - margin.right;
@@ -90,34 +103,41 @@ function plotTemperature(rawDataHi, rawDataLo) {
 
 }
 
-
-
-function initDraw(chart,col,xlabel,format) {
-    var width =  document.getElementById(chart).offsetWidth - margin.left - margin.right;
-    var height = document.getElementById(chart).offsetHeight - margin.top - margin.bottom;
+function initDraw(chart,col,xlabel,format,tipFormat) {
     var xScale = d3.scale.linear()
-        .domain([0, d3.max(markers, function(d) { return d[col]; })])
-        .range([0, width]);
+        .range([0, pwidth]);
+    var hist;
+    var binwidth;
+    if (transitFlag && col === 'time') {
+        xScale.domain([0, 1.001*d3.max(markers.filter(filterTime), function(d) { return d[col]; })]);
+        binwidth = xScale.domain()[1]/10.;
+        hist = d3.layout.histogram()
+               .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
+               (markers.filter(filterTime).map(function(d) {return d[col]; }));
+    } else {
+        xScale.domain([0, 1.001*d3.max(markers, function(d) { return d[col]; })]);
+        binwidth = xScale.domain()[1]/10.;
+        hist = d3.layout.histogram()
+               .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
+               (markers.map(function(d) {return d[col]; }));
+    }
     var yScale = d3.scale.linear()
-        .range([height, 0]);
+        .range([pheight, 0])
+        .domain([0, d3.max(hist, function(d) { return d.y; })]);
+    //alert(col+' '+d3.max(markers, function(d) { return d[col]; })+' '+d3.min(markers, function(d) { return d[col]; }));
 
-    var binwidth = xScale.domain()[1]/10.;
-    var hist = d3.layout.histogram()
-        .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
-        (markers.map(function(d) {return d[col]; }));
-
-    xAxis = d3.svg.axis()
+    var xAxis = d3.svg.axis()
        .scale(xScale)
        .orient("bottom")
        .tickFormat(d3.format(format));
 
     var svg = d3.select('#'+chart).append('svg')
-        .attr('width', width + margin.right + margin.left)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', pwidth + margin.right + margin.left)
+        .attr('height', pheight + margin.top + margin.bottom)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    var xBinwidth = width / hist.length *0.9;
+    var xBinwidth = pwidth / hist.length *0.93;
     yScale.domain([0, d3.max(hist, function(d) { return d.y; })]);
 
     svg.selectAll(".bar")
@@ -125,7 +145,7 @@ function initDraw(chart,col,xlabel,format) {
         .enter().append("rect")
         .attr("class", "bar")
         .attr("width", function(d) { return xBinwidth })
-        .attr("height", function(d) { return height- yScale(d.y); })
+        .attr("height", function(d) { return pheight- yScale(d.y); })
         .attr("x", function(d) {return xScale(d.x)})
         .attr("y", function(d) {return yScale(d.y)});
 
@@ -142,46 +162,73 @@ function initDraw(chart,col,xlabel,format) {
     svg.append("text")
         .attr("class", "x label")
         .attr("text-anchor", "middle")
-        .attr("x", width/2)
-        .attr("y", height + margin.bottom-3)
+        .attr("x", pwidth/2)
+        .attr("y", pheight + margin.bottom-3)
         .text(xlabel);
 
     var drag = d3.behavior.drag()
-    .on("drag", dragmove)
-    .on("dragend", dragended);
+       .on("dragstart", dragstarted)
+       .on("drag", dragmove)
+       .on("dragend", dragended);
 
-    svg.append("line")
-        .style("stroke", "red")
-        .style("stroke-width", "7px")
-        .attr("x1",width)
-        .attr("y1",0)
-        .attr("x2",width)
-        .attr("y2",height)
-        .attr("scale",xScale.domain()[1]/width)
-        .attr("width",width)
-        .attr("col",col)
-        .attr("prev",width)
-        .call(drag);
+    poly = [{"x":pwidth-5, "y":0},
+         {"x":pwidth+5,"y":0},
+         {"x":pwidth+5,"y":10},
+         {"x":pwidth,"y":15}, {"x":pwidth-5, "y":10}];
+    points0 = poly.map(function(d) { return [d.x,d.y].join(","); }).join(" ");
+    var boundary = document.getElementById(chart).getBoundingClientRect();
+
+    svg.selectAll("polygon")
+     .data([poly])
+     .enter().append("polygon")
+     .attr("points", points0)
+     .attr("scale",xScale.domain()[1]/pwidth)
+     .attr("x0",pwidth)
+     .attr("col",col)
+     .attr("prev",pwidth)
+     .attr("cursor", "move")
+     .attr("tipformat", tipFormat)
+     .attr("tipxmin", boundary.left + margin.left)
+     .attr("tipxmax", boundary.right - margin.right)
+     .call(drag);
+
     bounds[col] = xScale.domain()[1];
 
     // draw the x axis
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + pheight + ")")
         .call(xAxis);
+
+}
+
+function dragstarted() {
+    var y0 = d3.event.sourceEvent.pageY - 35;
+    tooltip.style("top", y0 + "px")
+           .style("visibility", "visible");
 }
 
 function dragmove() {
-    var x = Math.max(0, Math.min(this.getAttribute("width"), d3.event.x));
+    var obj = d3.select(this);
+    var x = Math.max(0, Math.min(pwidth, d3.event.x));
+    var dx = x - pwidth;
+    var points = poly.map(function(d) { return [d.x+dx,d.y].join(","); }).join(" ");
+    var scale = obj.attr("scale");
+    var textFormat = d3.format(obj.attr("tipformat"));
+    var x0 = Math.max(obj.attr("tipxmin"), Math.min(d3.event.sourceEvent.pageX, obj.attr("tipxmax")));
+
     d3.select(this)
-        .attr("x1", x)
-        .attr("x2", x);
+        .attr("points", points)
+        .attr("x0", x);
+
+    tooltip.style("left", x0 + "px")
+        .text(textFormat(x*scale));
 }
 
 function dragended() {
     var obj = d3.select(this);
     var col = obj.attr("col");
-    var x = +obj.attr("x1");   // convert string to float
+    var x = +obj.attr("x0");   // convert string to float
     var prev = +obj.attr("prev");
     bounds[col] = x*obj.attr("scale");
     if (x < prev) {
@@ -190,29 +237,40 @@ function dragended() {
         showMarkers();
     }
     obj.attr("prev", x);
+    tooltip.transition()
+       .duration(100)
+       .style("visibility", "hidden");
 }
 
-function drawHist(chart,col) {
-    var width =  document.getElementById(chart).offsetWidth - margin.left - margin.right;
-    var height = document.getElementById(chart).offsetHeight - margin.top - margin.bottom;
+function drawHist(chart,col,format) {
     var xScale = d3.scale.linear()
-        .domain([0, d3.max(markers, function(d) { return d[col]; })])
-        .range([0, width]);
+        .range([0, pwidth]);
+    var hist;
+    var binwidth;
+    if (transitFlag && col === 'time') {
+        xScale.domain([0, 1.001*d3.max(markers.filter(filterTime), function(d) { return d[col]; })]);
+        binwidth = xScale.domain()[1]/10.;
+        hist = d3.layout.histogram()
+           .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
+           (markers.filter(filterTime).map(function(d) {return d[col]; }));
+    } else {
+        xScale.domain([0, 1.001*d3.max(markers, function(d) { return d[col]; })]);
+        binwidth = xScale.domain()[1]/10.;
+        hist = d3.layout.histogram()
+           .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
+           (markers.map(function(d) {return d[col]; }));
+    }
     var yScale = d3.scale.linear()
-        .range([height, 0]);
-    var binwidth = xScale.domain()[1]/10.;
-    var hist = d3.layout.histogram()
-        .bins(d3.range(xScale.domain()[0], xScale.domain()[1]+0.5*binwidth, binwidth))
-        (markers.map(function(d) {return d[col]; }));
-    var xBinwidth = width / hist.length *0.9;
-    yScale.domain([0, d3.max(hist, function(d) { return d.y; })]);
+        .range([pheight, 0])
+        .domain([0, d3.max(hist, function(d) { return d.y; })]);
+    var xBinwidth = pwidth / hist.length *0.93;
 
     var svg = d3.select('#'+chart+' svg')
     var bar = svg.selectAll(".bar").data(hist);
     bar.exit().remove();
     bar.enter().append("rect")
         .attr("class", "bar");
-    bar.attr("height", function(d) { return height- yScale(d.y); })
+    bar.attr("height", function(d) { return pheight- yScale(d.y); })
        .attr("width", function(d) { return xBinwidth; })
        .attr("x", function(d) {return xScale(d.x)})
        .attr("y", function(d) {return yScale(d.y)});
@@ -226,18 +284,36 @@ function drawHist(chart,col) {
         .attr("text-anchor", "middle")
         .text(function(d) { return d.y; });
 
-    svg.select("line")
-        .attr("x1",width)
-        .attr("x2",width);
+    svg.select("polygon")
+        .attr("points", points0)
+        .attr("scale",xScale.domain()[1]/pwidth)
+        .attr("x0",pwidth)
+        .attr("prev",pwidth);
 
-    d3.select(".x.axis").call(xAxis);
+    bounds[col] = xScale.domain()[1];
+
+    var xAxis = d3.svg.axis()
+       .scale(xScale)
+       .orient("bottom")
+       .tickFormat(d3.format(format));
+    svg.select(".x.axis").call(xAxis);
 
 }
 
 function reset(chart) {
-    var width =  document.getElementById(chart).offsetWidth - margin.left - margin.right;
-    var svg = d3.select('#'+chart+' svg')
-    svg.select("line")
-        .attr("x1",width)
-        .attr("x2",width);
+    var svg = d3.select('#'+chart+' svg');
+    svg.select("polygon")
+        .attr("points", points0)
+        .attr("x0",pwidth)
+        .attr("prev",pwidth);
 }
+
+function filterTime(d) {
+    if ( d['time'] < bounds['time'] ) {
+      return true;
+    } else {
+        //alert(d['time']+' '+d['address']);
+      return false;
+    }
+}
+

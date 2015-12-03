@@ -16,40 +16,16 @@
     </head>
 
     <body>
-        <!--nav class="navbar-xs navbar-inverse">
-          <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home<span class="sr-only">(current)</span></a></li>
-                <li><a href="#">Source</a></li>
-                <li><a href="#">About</a></li>
-              </ul>
-              <form class="navbar-form navbar-right">
+        <div class="panel" id="location-panel">
+            <form class="form-inline">
                 <div class="form-group">
                 <select class="form-control" id="list">
                    <option value="0">Choose your work place/school</option>
-                   <option value="Purdue Memorial Union">Purdue Memorial Union</option>
-                   <option value="Purdue Stewart Center">Purdue Stewart Center</option>
-                   <option value="Happy Hollow School">Happy Hollow School</option>
-                </select>
-                </div>
-                <div class="form-group">
-                    <input id="address" type="textbox" class="form-control" placeholder="or Enter a new address">
-                    <button id="submit" type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
-                </div>
-              </form>
-            </div>
-          </div>
-          </nav-->
-
-          <div class="panel" id="floating-panel">
-              <form class="form-inline">
-                <div class="form-group">
-                <select class="form-control" id="list">
-                   <option value="0">Choose your work place/school</option>
-                   <option value="Purdue Memorial Union">Purdue Memorial Union</option>
-                   <option value="Purdue Stewart Center">Purdue Stewart Center</option>
-                   <option value="Happy Hollow School">Happy Hollow School</option>
+                   <option value="1">Purdue Stewart Center</option>
+                   <option value="2">Ivy Tech Community College</option>
+                   <option value="3">Happy Hollow School</option>
+                   <option value="4">Subaru of Indiana Automotive</option>
+                   <option value="5">Caterpillar Inc</option>
                 </select>
                 </div>
                 <div class="form-group">
@@ -58,80 +34,133 @@
                 </div>
             </form>
         </div>
+        <div class="panel" id="price-panel">
+            <div class="row-fluid">
+                <span class="label label-pill label-default">minimum <span id="min-price"></span></span>
+                <button id="show" type="button" class="btn btn-info btn-xs">show</button>
+             </div>
+        </div>
 
-            <div class="col-md-4" id="leftcol">
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                  <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                      <h5 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-overview" aria-expanded="false" aria-controls="collapseOne">Living in Lafayette, IN</a>
-                      </h5>
-                    </div>
-                    <div id="sp-overview" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Living Lafayette, IN">
-                      <div class="panel-body">
-                          <label class="col-sm-3 control-label">Climate</label>
+        <div class="col-md-4" id="leftcol">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                  <h5 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-overview" aria-expanded="false" aria-controls="collapseOne">Living in Greater Lafayette, IN</a>
+                  </h5>
+                </div>
+                <div id="sp-overview" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Living Lafayette, IN">
+                  <div class="panel-body">
+                      <div id="p-climate">
+                          <div class="row"><label class="col-sm-4 control-label">Climate</label></div>
                           <div id="chart-temp"></div>
-                          A desirable, and increasingly common, method for mashups to obtain data from a web site is through a web site’s publicly available application programming interface (API). An API is designed specifically to facilitate communication between programs, often including the exchange of data. (You will be introduced in detail to APIs in Chapters 6 and 7.) At this time, Craigslist does not provide a public API but does provide RSS feeds. As I will discuss in Chapter 4, RSS feeds are used to syndicate, or transport, information from a web site to a program that consumes this information. The RSS feeds, however, do not provide enough detail to precisely position the listings on a map. Consequently, Housingmaps.com screen-scrapes (or crawls) Craigslist; that is, Housingmaps.com retrieves and parses the HTML pages of Craigslist to obtain detailed information about each listing. The crawling is performed carefully so as to minimize the use of bandwidth. When you access Housingmaps.com, you are accessing not real-time data from Craigslist but rather the data that has been screen-scraped by Housingmaps.com.
                       </div>
-                    </div>
-                  </div>
-                  <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingTwo">
-                      <h5 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-filter" aria-expanded="true" aria-controls="collapseTwo">Find a Place</a>
-                      </h5>
-                    </div>
-                    <div id="sp-filter" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="Find a Place">
-                      <div class="panel-body">
-                          <form class="form-horizontal">
-                             <div class="form-group">
-                               <label class="col-sm-3 control-label">Bedroom</label>
-                               <div class="col-sm-9" id="bedroom">
-                                  <label class="checkbox-inline">
-                                    <input type="checkbox" id="checkboxBed1" value="1"> 1
-                                  </label>
-                                  <label class="checkbox-inline">
-                                    <input type="checkbox" id="checkboxBed2" value="2"> 2
-                                  </label>
-                                  <label class="checkbox-inline">
-                                    <input type="checkbox" id="checkboxBed3" value="4"> 3
-                                  </label>
-                                  <label class="checkbox-inline">
-                                    <input type="checkbox" id="checkboxBed4" value="8"> 4+
-                                  </label>
-                               </div>
-                             </div>
-                          </form>
-                          <div id="chart1"></div>
-                          <div id="chart2"></div>
+                      <div id="p-school">
+                          <div class="row"><label class="col-sm-4 control-label">Schools</label></div>
+                          <div class="col-sm-12">Lafayette School Corporation <a href="http://compass.doe.in.gov/dashboard/overview.aspx?type=corp&id=7855" target="_blank">[report]</a></div>
+                          <div class="col-sm-12">West Lafayette Community School Corporation <a href="http://compass.doe.in.gov/dashboard/overview.aspx?type=corp&id=7875" target="_blank">[report]</a></div>
+                          <div class="col-sm-12">Tippecanoe School Corporation <a href="http://compass.doe.in.gov/dashboard/overview.aspx?type=corp&id=7865" target="_blank">[report]</a></div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingThree">
-                      <h5 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-result" aria-expanded="false" aria-controls="collapseThree">Housing Detail</a>
-                      </h5>
-                    </div>
-                    <div id="sp-result" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Housing Detail">
-                      <div class="panel-body">
-                          <div id="side-menu">
-                             <div id="property-price" class="menu-line"></div>
-                             <div id="property-bedroom" class="menu-line"></div>
-                             <div id="property-sqft" class="menu-line"></div>
-                             <div id="property-address" class="menu-line"></div>
-                             <div id="driving-distance" class="menu-line"></div>
-                             <div id="crime-rate" class="menu-line"></div>
-                             <div id="website" class="menu-line"></div>
-                          </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                  <h5 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-filter" aria-expanded="true" aria-controls="collapseTwo" id="filter-link">Find a Place</a>
+                  </h5>
+                </div>
+                <div id="sp-filter" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="Find a Place">
+                  <div class="panel-body">
+                      <form class="form-horizontal">
+                         <div class="form-group">
+                           <div class="row">
+                           <label class="col-sm-4 control-label">Bedroom</label>
+                           <div class="col-sm-8">
+                              <label class="checkbox-inline">
+                                <input type="checkbox" name="checkbox-bed" value="1"> 1
+                              </label>
+                              <label class="checkbox-inline">
+                                <input type="checkbox" name="checkbox-bed" value="2"> 2
+                              </label>
+                              <label class="checkbox-inline">
+                                <input type="checkbox" name="checkbox-bed" value="4"> 3
+                              </label>
+                              <label class="checkbox-inline">
+                                <input type="checkbox" name="checkbox-bed" value="8"> 4+
+                              </label>
+                           </div>
+                           </div>
+
+                           <div class="row">
+                           <label class="col-sm-4 control-label">Public transit</label>
+                           <div class="col-sm-8">
+                              <label class="checkbox-inline">
+                                <input type="checkbox" id="checkbox-transit" value="y"> yes
+                              </label>
+                           </div>
+                           </div>
+                         </div>
+                      </form>
+
+                      <div id="p-transit-time" class="collapse">
+                          <div class="row"><label class="col-sm-4 control-label">Transit time</label></div>
+                          <div id="chart3"></div>
+                      </div>
+                      <div id="p-distance">
+                          <div class="row"><label class="col-sm-4 control-label">Driving distance</label></div>
+                          <div id="chart1"></div>
+                      </div>
+                      <div id="p-crime-rate">
+                          <div class="row"><label class="col-sm-4 control-label">Crime rate</label></div>
+                          <div id="chart2"></div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingThree">
+                  <h5 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#sp-result" aria-expanded="false" aria-controls="collapseThree" id="result-link">Housing Detail</a>
+                  </h5>
+                </div>
+                <div id="sp-result" class="panel-collapse collapse" role="tabpanel" aria-labelledby="Housing Detail">
+                    <div class="panel-body">
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Rent</label><div id="property-price" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Bedroom</label><div id="property-bedroom" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Size</label><div id="property-sqft" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Address</label><div id="property-address" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Driving distance</label><div id="driving-distance" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Crime rate</label><div id="crime-rate" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Transit time</label><div id="transit-time" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Transit route</label><div id="transit-route" class="col-sm-9"></div>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-3 control-label">Source</label><div id="website" class="col-sm-9"></div>
+                        </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-8" id="rightcol">
-                <div id="map"></div>
-            </div>
+        </div>
+        <div class="col-md-8" id="rightcol">
+            <div id="map"></div>
+        </div>
     </body>
 </html>
 
